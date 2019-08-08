@@ -79,8 +79,9 @@
         (is (= (nil? (time (dictionary-attack try-fn dictionary-file-name))) true))))))
 
 (defn test-ns-hook []
-  (do (test-with-small-dictionary)
+  (do
+    (test-with-small-dictionary)
     (test-with-small-dictionary-without-match)
     ; uncomment to run integration test
-    ;(test-with-2G-dictionary)
+    (test-with-2G-dictionary)
       ))
