@@ -51,7 +51,7 @@
 ; Functional test - small dictionary
 ; creates a small dictionary
 ; runs dictionary attack using small dictionary
-; finally match is found
+; match is found
 (deftest test-with-small-dictionary
   (testing "test with small dictionary - match found"
     (let [dictionary-file-name "dictionary-1.txt"
@@ -83,5 +83,5 @@
     (test-with-small-dictionary)
     (test-with-small-dictionary-without-match)
     ; uncomment to run integration test
-    (test-with-2G-dictionary)
+    ;(test-with-2G-dictionary)
       ))

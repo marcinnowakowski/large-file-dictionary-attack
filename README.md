@@ -4,21 +4,34 @@ A clojure library providing example implementation of dictionary attack.
 
 ## Technical notes
 
-Current version is simplest possible single thread implementation using lazy sequence. Two aspects of solution are important:
-1. Thanks to use of lazy sequence small amount of memory is used. Whole possibly large list of passwords is not loaded to memory at once. 
-1. For reading a dictionary file java.io.BufferedReader is used. Default implementation of java.io.BufferedReader sets buffer size to 8k which is optimal for disk io operations.
+Current version (dictionary-attack-java-nio-lines) is a single thread implementation using java.nio.file.Files/lines method for io operations.
+
+Previous version (dictionary-attack-line-seq) is a single thread implementation using BufferedReader and lazy sequences. This implementation is slower then the first one (dictionary-attack-java-nio-lines) - results in section "Test results".
 
 ## Possible improvements
 
-1. Using java.nio package for faster reading of dictionary file. 
-1. Implementing parallel execution of predicate verification. Useful if predicate verification takes more time then io operations.
-1. Use compression for dictionary file if io operations are performance bottle neck. In this approach compressed dictionary file is stored on disk and during it is read and decompressed.
+1. Method java.nio.file.Files/readAllBytes could be used instead of java.nio.file.Files/lines. Based on this article: https://funnelgarden.com/java_read_file/#Performance_Summary.
+1. try-fn predicate verification could be done in parallel. This improvement can bring benefits if try-fn requires take more time then io operations. It is applicable if multiple processor are available on the machine.
+1. If io operations are performance bottle neck instead of plain text dictionary, compressed dictionary can be used. In this approach a compressed dictionary is stored on the disk. Dictionary is read and decompressed before performing computation.
 
 ## Test results
 
+dictionary-attack-java-nio-lines
 ```
-\> lein test
+lein test large-file-dictionary-attack.core-test
+DICTIONARY 1 - MATCH
+"Elapsed time: 10.63876 msecs"
+DICTIONARY 2 - NO MATCH
+"Elapsed time: 2.439274 msecs"
+2G DICTIONARY - MATCH
+"Elapsed time: 15791.472212 msecs"
 
+Ran 3 tests containing 3 assertions.
+0 failures, 0 errors.
+```
+
+dictionary-attack-line-seq
+```
 lein test large-file-dictionary-attack.core-test
 DICTIONARY 1 - MATCH
 "Elapsed time: 5.955487 msecs"
